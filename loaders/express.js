@@ -14,7 +14,13 @@ const initExpress = ({ app }) => {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
   app.use(helmet());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: process.env.CLIENT_URL,
+      credentials: true,
+      optionsSuccessStatus: 200,
+    }),
+  );
 
   app.use("/auth", authRouter);
   app.use("/users", usersRouter);
