@@ -5,8 +5,8 @@ const logger = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
 
-const authRouter = require("../routes/auth");
-const usersRouter = require("../routes/users");
+const authRouter = require("../api/routes/auth");
+const usersRouter = require("../api/routes/users");
 
 const initExpress = ({ app }) => {
   app.use(logger("dev"));
