@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  name: String,
-  profile: Object,
+  nickname: String,
+  photo: String,
   files: [fileSchema],
 });
 

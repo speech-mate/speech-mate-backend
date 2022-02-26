@@ -4,17 +4,17 @@ const User = require("../models/User");
 const { MESSAGE } = require("../constants");
 
 const login = async (req, res, next) => {
-  const { name, email, profile } = req.body;
+  const { email, nickname, photo } = req.body;
 
   try {
     let user = await User.findOneAndUpdate(
       { email },
-      { email, name, profile },
+      { email, nickname, photo },
       { upsert: true, new: true },
     );
 
     const accessToken = jwt.sign(
-      { name, email, profile },
+      { email, nickname, photo },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: process.env.ACCESS_TOKEN_MAX_AGE },
     );
