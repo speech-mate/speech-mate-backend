@@ -26,7 +26,7 @@ const initExpress = ({ app }) => {
   app.use("/users", usersRouter);
 
   app.use((req, res, next) => {
-    res.sendStatus(createError(404));
+    res.send(createError(404));
   });
 
   app.use((err, req, res, next) => {
