@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/speech-mate/speech-mate-backend#readme",
   "dependencies": {
+    "aws-sdk": "^2.1086.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -27,7 +28,9 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.3",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
+    "multer-s3": "^2.10.0"
   },
   "devDependencies": {
     "eslint": "^8.10.0",

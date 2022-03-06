@@ -1,24 +1,21 @@
 const mongoose = require("mongoose");
 
 const subThemeSchema = new mongoose.Schema({
-  time: Number,
-  title: String,
+  min: Number,
+  sec: Number,
+  text: String,
   isAchieved: Boolean,
 });
 
 const fileSchema = new mongoose.Schema({
   title: String,
-  length: Number,
+  min: Number,
+  sec: Number,
   url: String,
   subThemes: [subThemeSchema],
-  selectedPitch: {
-    type: String,
-    enum: ["C", "D", "E", "F", "G"],
-  },
-  dominantNode: {
-    type: String,
-    enum: ["C", "D", "E", "F", "G"],
-  },
+  selectedTone: Object,
+  userPitch: Object,
+  pitchStatus: Object,
   createdAt: String,
 });
 
