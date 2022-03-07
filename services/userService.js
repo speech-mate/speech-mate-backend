@@ -2,6 +2,23 @@ const createError = require("http-errors");
 const User = require("../models/User");
 const { MESSAGE } = require("../constants");
 
+const readFiles = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const result = await User.findById(id);
+
+    res.json({
+      message: MESSAGE.OK,
+      data: {
+        files: result.files,
+      },
+    });
+  } catch (err) {
+    next(createError(500, MESSAGE.INTERNAL_SERVER_ERROR));
+  }
+};
+
 const createFile = async (req, res, next) => {
   const { id } = req.params;
   const { min, sec, title, frequency, subThemes, userPitch, selectedTone } =
@@ -28,8 +45,6 @@ const createFile = async (req, res, next) => {
       },
       { new: true },
     );
-
-    console.log(result);
 
     res.json({
       message: MESSAGE.OK,
@@ -118,4 +133,4 @@ const deleteFile = async (req, res, next) => {
   }
 };
 
-module.exports = { createFile, updateFile, deleteFile };
+module.exports = { createFile, updateFile, deleteFile, readFiles };
