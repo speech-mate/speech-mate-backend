@@ -42,4 +42,80 @@ const createFile = async (req, res, next) => {
   }
 };
 
-module.exports = { createFile };
+const updateFile = async (req, res, next) => {
+  const { id, fileId } = req.params;
+  const { subThemes } = req.body;
+
+  try {
+    const user = await User.findById(id);
+    const newFiles = user.files.map((file) => {
+      if (file._id.toString() === fileId) {
+        const {
+          title,
+          min,
+          sec,
+          url,
+          selectedTone,
+          userPitch,
+          createdAt,
+          _id,
+        } = file;
+        return {
+          _id,
+          title,
+          min,
+          sec,
+          url,
+          selectedTone,
+          userPitch,
+          createdAt,
+          subThemes,
+        };
+      }
+      return file;
+    });
+
+    const result = await User.findByIdAndUpdate(
+      id,
+      { files: newFiles },
+      { new: true },
+    );
+
+    res.json({
+      message: MESSAGE.OK,
+      data: {
+        files: result.files,
+      },
+    });
+  } catch (err) {
+    next(createError(500, MESSAGE.INTERNAL_SERVER_ERROR));
+  }
+};
+
+const deleteFile = async (req, res, next) => {
+  const { id, fileId } = req.params;
+
+  try {
+    const user = await User.findById(id);
+    const newFiles = user.files.filter(
+      (file) => file._id.toString() !== fileId,
+    );
+
+    const result = await User.findByIdAndUpdate(
+      id,
+      { files: newFiles },
+      { new: true },
+    );
+
+    res.json({
+      message: MESSAGE.OK,
+      data: {
+        files: result.files,
+      },
+    });
+  } catch (err) {
+    next(createError(500, MESSAGE.INTERNAL_SERVER_ERROR));
+  }
+};
+
+module.exports = { createFile, updateFile, deleteFile };

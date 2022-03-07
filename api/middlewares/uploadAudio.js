@@ -15,28 +15,26 @@ const storage = multerS3({
   bucket: process.env.AWS_BUCKET_NAME,
 });
 
-// const awsDeleteVideo = async (req, res, next) => {
-//   const {
-//     params: { id }
-//   } = req
-//   const video = await Video.findById(id)  // 현재 URL에 전달된 id값을 받아서 db찾음
-//   const url = video.fileUrl.split('/')    // video에 저장된 fileUrl을 가져옴
-//   const delFileName = url[url.length - 1]  // 버킷에 저장된 객체 URL만 가져옴
-//   const params = {
-//     Bucket: '버킷이름/video',
-//     Key: delFileName
-//   }
-//   s3.deleteObject(params, function(err, data) {
-//     if (err) {
-//       console.log('aws video delete error')
-//       console.log(err, err.stack)
-//     } else {
-//       console.log('aws video delete success' + data)
-//     }
-//   })
-//   next()
-// }
+const deleteAudio = async (req, res, next) => {
+  const { filename } = req.body;
 
-const uploadFile = multer({ storage }).single("file");
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: filename,
+  };
 
-module.exports = { uploadFile };
+  s3.deleteObject(params, function (err, data) {
+    if (err) {
+      console.log("aws video delete error");
+      console.log(err, err.stack);
+    } else {
+      console.log("aws video delete success" + data);
+    }
+  });
+
+  next();
+};
+
+const uploadAudio = multer({ storage }).single("file");
+
+module.exports = { uploadAudio, deleteAudio };
