@@ -1,17 +1,17 @@
 const express = require("express");
-const { createFile } = require("../../services/userService");
-const { uploadFile } = require("../middlewares/uploadAudio");
+const {
+  createFile,
+  updateFile,
+  deleteFile,
+} = require("../../services/userService");
+const { uploadAudio, deleteAudio } = require("../middlewares/uploadAudio");
 
 const router = express.Router();
 
-router.post("/:id/files/", uploadFile, createFile);
+router.post("/:id/files/", uploadAudio, createFile);
 
-router.put("/:id/files/:fileId", (req, res, next) => {
-  console.log(req.body);
-});
+router.put("/:id/files/:fileId", updateFile);
 
-router.delete("/:id/files/:fileId", (req, res, next) => {
-  console.log(req.body);
-});
+router.delete("/:id/files/:fileId", deleteAudio, deleteFile);
 
 module.exports = router;
