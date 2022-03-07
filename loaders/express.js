@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const authRouter = require("../api/routes/auth");
 const usersRouter = require("../api/routes/users");
+const verifyAccessToken = require("../api/middlewares/verifyAccessToken");
 
 const initExpress = ({ app }) => {
   app.use(logger("dev"));
@@ -23,7 +24,7 @@ const initExpress = ({ app }) => {
   );
 
   app.use("/auth", authRouter);
-  app.use("/users", usersRouter);
+  app.use("/users", verifyAccessToken, usersRouter);
 
   app.use((req, res, next) => {
     res.send(createError(404));

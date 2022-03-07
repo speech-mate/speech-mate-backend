@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  readFiles,
   createFile,
   updateFile,
   deleteFile,
@@ -7,6 +8,8 @@ const {
 const { uploadAudio, deleteAudio } = require("../middlewares/uploadAudio");
 
 const router = express.Router();
+
+router.get("/:id/files/", readFiles);
 
 router.post("/:id/files/", uploadAudio, createFile);
 
