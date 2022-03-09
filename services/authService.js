@@ -39,8 +39,7 @@ const login = async (req, res, next) => {
 };
 
 const refreshToken = async (req, res, next) => {
-  const cookies = req.cookies;
-  const refreshToken = cookies.jwt;
+  const refreshToken = req.universalCookies.get("jwt");
 
   if (!refreshToken) return next(createError(401, "Unauthorized"));
 
