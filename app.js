@@ -3,6 +3,13 @@ const initServer = require("./loaders");
 const express = require("express");
 const http = require("http");
 
+async function createServer() {
+  const app = express();
+  await initServer({ expressApp: app });
+
+  return app;
+}
+
 async function startServer() {
   const app = express();
   const port = process.env.PORT || "3001";
@@ -15,6 +22,8 @@ async function startServer() {
   server.listen(port);
   server.on("error", onError);
   server.on("listening", onListening);
+
+  return app;
 
   function onError(err) {
     if (err.syscall !== "listen") {
@@ -42,4 +51,6 @@ async function startServer() {
   }
 }
 
-startServer();
+if (process.env.NODE_ENV !== "test") startServer();
+
+module.exports = createServer;

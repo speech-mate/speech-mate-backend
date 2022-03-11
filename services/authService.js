@@ -17,12 +17,12 @@ const login = async (req, res, next) => {
       new: true,
     });
 
-    const accessToken = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: process.env.ACCESS_TOKEN_MAX_AGE,
+    const accessToken = jwt.sign(userInfo, process.env.ACCESS_SECRET, {
+      expiresIn: process.env.ACCESS_MAX_AGE,
     });
 
-    const refreshToken = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: process.env.REFRESH_TOKEN_MAX_AGE,
+    const refreshToken = jwt.sign(userInfo, process.env.REFRESH_SECRET, {
+      expiresIn: process.env.REFRESH_MAX_AGE,
     });
 
     res.json({
@@ -39,14 +39,14 @@ const login = async (req, res, next) => {
 };
 
 const refreshToken = async (req, res, next) => {
-  const refreshToken = req.universalCookies.get("jwt");
+  const { refreshToken } = req.body;
 
   if (!refreshToken) return next(createError(401, "Unauthorized"));
 
   try {
     jwt.verify(
       refreshToken,
-      process.env.ACCESS_TOKEN_SECRET,
+      process.env.REFRESH_SECRET,
       async (error, decoded) => {
         if (error?.name === "TokenExpiredError") {
           return next(createError(401, "Unauthorized"));
@@ -60,8 +60,8 @@ const refreshToken = async (req, res, next) => {
 
         const accessToken = jwt.sign(
           { email, nickname, photo },
-          process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: process.env.REFRESH_TOKEN_MAX_AGE },
+          process.env.ACCESS_SECRET,
+          { expiresIn: process.env.REFRESH_MAX_AGE },
         );
 
         res.json({
