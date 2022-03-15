@@ -10,9 +10,11 @@ const s3 = new AWS.S3({
 
 const storage = multerS3({
   s3,
-  contentType: multerS3.AUTO_CONTENT_TYPE,
   acl: "public-read",
   bucket: process.env.AWS_BUCKET_NAME,
+  contentType: (req, file, callback) => {
+    callback(null, file.mimetype);
+  },
 });
 
 const deleteAudio = async (req, res, next) => {
