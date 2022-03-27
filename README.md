@@ -48,11 +48,60 @@ pitch detection 알고리즘을 적용한 음성 녹음 웹 앱
 
 ### Backend : <img alt="Node.js" src ="https://img.shields.io/badge/Node.js-43853D?style=for-the-appveyor&logo=node.js&logoColor=white"/> , <img alt="Express.js" src ="https://img.shields.io/badge/Express.js-404D59?style=for-the-appveyor"/> , <img alt="mongoDB" src ="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-appveyor&logo=mongodb&logoColor=white"/>
 
-### 📕 API Docs
-TODO 3
+### [📕 API Docs](https://nebula-cemetery-b32.notion.site/API-Docs-32c540c241ff4934954336e010099aae)
 
-## 🚀 Issue Log
-TODO 4
+## 💻 Getting Started
+### 원격 저장소 내려받기
+```
+$ git clone https://github.com/speech-mate/speech-mate-backend.git
+$ npm install
+```
+### 환경 변수 설정
+```
+DATABASE_URL="..."
+ACCESS_SECRET="..."
+REFRESH_SECRET="..."
+ACCESS_MAX_AGE="..."
+REFRESH_MAX_AGE="..."
+CLIENT_URL=http://localhost:3000
+AWS_ACCESS_KEY_ID="..."
+AWS_SECRET_ACCESS_KEY="..."
+AWS_REGION="..."
+AWS_BUCKET_NAME="..."
+```
+### 실행
+```
+$ npm start
+```
+### 테스트
+```
+$ npm test
+```
+## 🚀 Challenges
+<details>
+<summary>라이브러리 의존성 없는 Pitch Detection 알고리즘 구현하기 (FE)</summary>
+  Pitch Detection 기능이 프로젝트의 메인 기능 중 하나이기 때문에 라이브러리를 쓰지 않는 기능 구현을 추구하였습니다. 라이브러리를 사용하지 않는 경우 라이브러리 업데이트와 같은 외부적 요인에서 벗어나 주체적인 코드의 유지보수 작업을 할 수 있다고 생각하였습니다. Pitch Detection 알고리즘에는 Web Audio API의 AnalyserNode로 추출한 시간 영역 데이터를 활용하였으며, Pitch Detection에 쓰이는 3가지 알고리즘을 비교 분석하여 최종적으로 Auto Correlation을 채택하게 되었습니다. Auto Correlation 구현으로 목소리와 같은 복잡한 파형의 주파수 계산을 할 수 있게 되었습니다.
 
-## 💬프로젝트를 마친 소감
-TODO 2
+#### [0️⃣ 소리에 대한 기본적인 이해](https://nebula-cemetery-b32.notion.site/22ee3790bcc440139249d894f7b6a54a)
+
+#### [1️⃣ 브라우저가 소리를 인식하게 해보자](https://nebula-cemetery-b32.notion.site/3e3ee3ba678146018e86462cedd56e65)
+
+#### [2️⃣ Web Audio API의 활용 방안](https://nebula-cemetery-b32.notion.site/Web-Audio-API-b2d4d5ca34ac498b859daec5fb73646d)
+
+#### [3️⃣ Pitch Detection 알고리즘 구현 (1) - Zero Crossing](https://nebula-cemetery-b32.notion.site/Pitch-Detection-1-Zero-Crossing-f0a6356ecbbc4f14a3a6680af2721056)
+
+#### [4️⃣ Pitch Detection 알고리즘 구현 (2) - Fast Fourier Transform](https://nebula-cemetery-b32.notion.site/Pitch-Detection-2-Fast-Fourier-Transform-0c48dd6ad3bb40e7afecfc961b130f9d)
+
+#### [5️⃣ Pitch Detection 알고리즘 구현 (3) - Auto Correlation Function](https://nebula-cemetery-b32.notion.site/Pitch-Detection-3-Auto-Correlation-Function-862a6748ca44428e89bb3a0e2c08a9ac)
+</details>
+<details>
+<summary>목소리 피치 시각화 로직에 쓰로틀링 추가하기 (FE)</summary>
+프로젝트 초기에는 NewPractice 페이지의 2단계(사용자 베이스 목소리 주파수 추출), 4단계 (녹음 연습)에서 실시간으로 계산한 주파수를 매 번 State에 업데이트하여 사용자에게도 실시간 주파수 정보를 보여주는 로직으로 작성이 되어 있었습니다. 그러나 실제로 서비스를 배포하고 피드백을 수집하던 중, 목소리 피치 시각화 (2단계: Hz 정보, 4단계: 건반 색 표시) 변경이 잦은 느낌이 있다는 의견을 듣게 되었고, 이에 쓰로틀링을 적용하여 2단계 Hz 정보 렌더링의 경우 초당 270회에서 3.8회로 최적화 할 수 있었습니다. 
+  
+#### [예시 코드](https://www.notion.so/React-Throttle-0de98da0a72b4a5fa61d60ae82844025)
+</details>
+<details>
+<summary>녹음 파일을 서버에 전달, AWS S3에 업데이트 하기 (FE & BE)</summary>
+녹음 파일을 서버에 전송할 때, 파일 객체 뿐만 아니라 제목(String), 소주제(Array) 등 여러 데이터 타입의 정보를 함께 전송할 필요가 있었습니다. 이에 FormData 객체의 인코딩 타입을 multipart/form-data로 설정하고 문자열이 아닌 데이터들은 문자열로 변환하여 각기 다른 타입의 데이터가 서버로 전송될 수 있도록 구현하였습니다. 서버에서는 multer-s3를 사용하여 파일 데이터를 AWS S3에 업데이트하고 나머지 정보는 S3 버킷에 업데이트된 파일의 url과 함께 mongoDB에 저장될 수 있도록 구현하였습니다. DB에 url 정보가 있기 때문에 사용자가 디바이스를 변경하여도 동일한 아이디로 접속한다면 언제든지 해당 파일에 접근 가능하도록 구현하였습니다.
+</details>
+
