@@ -1,7 +1,7 @@
 # SPEECH MATE  - 백앤드 파트
 pitch detection 알고리즘을 적용한 음성 녹음 웹 앱
 
-👄[Speech Mate Demo](https://speechmate.online)<br/>
+👄[Speech Mate Demo](https://www.speechmate.online)<br/>
 📚 [프론트앤드 Repository](https://github.com/speech-mate/speech-mate-frontend)
 
 ## 스피치 메이트 소개
